@@ -79,25 +79,6 @@ app.listen(3000, () => {
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
   # Simple server using Node.js
   const { createServer } = require('node:http');

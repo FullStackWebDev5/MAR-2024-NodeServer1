@@ -1,5 +1,20 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+const checkUserLoggedIn = (req, res, next) => {
+  let isLoggedIn = false // Test
+  if(isLoggedIn) {
+    next()
+  } else {
+    return res.json({
+      message: "You've not logged in! Please log in first!"
+    })
+  }
+}
+
+// Middleware attached to all routes
+app.use(bodyParser.urlencoded())
 
 const USERS = [
   {
@@ -66,12 +81,25 @@ app.get('/contact', (req, res) => {
   res.sendFile(__dirname + '/html/contact.html')
 })
 
+app.get('/signup', (req, res) => {
+  res.sendFile(__dirname + '/html/signup.html')
+})
+
 app.get('/download-instructions', (req, res) => {
   res.download(__dirname + '/dummy.pdf')
 })
 
 app.get('/download-video', (req, res) => {
   res.download(__dirname + '/test.mp4')
+})
+
+app.post('/signup/process', (req, res) => {
+  res.send(`Welcome to our platform, ${req.body.name}!`)
+})
+
+// Private route
+app.get('/profile', checkUserLoggedIn, (req, res) => {
+  res.send('PROFILE PAGE')
 })
 
 app.listen(3000, () => {
@@ -108,8 +136,11 @@ app.listen(3000, () => {
   # HTTP Methods: (Future: REST API)
     - GET
     - POST
-    - PUT
+    - PATCH
     - DELETE
+
+  # Middlewares (Future: Authentication & Authorization)
+    - Private (Logged in/Premium users) & Public routes (Accessible all users)
 
   # Status Code:
     - 200: Successful/OK
